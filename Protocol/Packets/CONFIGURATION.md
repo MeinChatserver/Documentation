@@ -1,5 +1,5 @@
 # Packet: `CONFIGURATION`
-Dieses Paket wird nach einem (`HANDSHAKE`)(HANDSHAKE.m) automatisch an den Clienten gesendet.
+Dieses Paket wird nach einem [`HANDSHAKE`](HANDSHAKE.md) automatisch an den Clienten gesendet.
 
 ```json
 {
