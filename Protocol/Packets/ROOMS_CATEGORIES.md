@@ -1,5 +1,5 @@
 # Packet: `ROOMS_CATEGORIES`
-Dieses Paket wird nach einem (`HANDSHAKE`)(HANDSHAKE.md) automatisch an den Clienten gesendet.
+Dieses Paket wird nach einem [`HANDSHAKE`](HANDSHAKE.md) automatisch an den Clienten gesendet.
 
 ```json
 {
