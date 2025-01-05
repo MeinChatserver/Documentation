@@ -17,3 +17,4 @@ Die Pakete haben immer den gleichen Aufbau und definieren, welche Aktion (`<oper
 ```
 
 ## Protokoll
+[`__INTERNAL__`](Packets/__INTERNAL__.md)
