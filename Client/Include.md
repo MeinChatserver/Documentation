@@ -4,7 +4,7 @@
   <param name="port" value="2710" />
 </object>
 ```
-![image](https://github.com/user-attachments/assets/b0fbe376-5624-4e5c-8c86-30f95e3455f2)
+![image](https://github.com/MeinChatserver/Documentation/blob/main/FAQ%20Screenshots/login_1.png?raw=true)
 
 
 # Example (Full configuration)
@@ -20,7 +20,7 @@
 </object>
 ```
 
-![image](https://github.com/user-attachments/assets/2f971b13-15ee-4272-a55a-fe6e03db3039)
+![image](https://github.com/MeinChatserver/Documentation/blob/main/FAQ%20Screenshots/login_2.png?raw=true)
 
 # Configuration
 | Name | Type | Description |
