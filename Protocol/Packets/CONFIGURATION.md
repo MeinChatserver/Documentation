@@ -17,3 +17,5 @@ Dieses Paket wird nach einem [`HANDSHAKE`](HANDSHAKE.md) automatisch an den Clie
   }
 }
 ```
+
+Seit Build [`#85a1b72`](https://github.com/MeinChatserver/Server/commit/85a1b723a29c509879a4dc2d6e29e9d58b345702) wird nun auch `style` mitgeliefert, sodass andere (exteren) Clienten den Login-Style nutzen können.
