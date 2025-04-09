@@ -15,3 +15,16 @@ Dieses Paket kann Grundlegende Informationen oder Steuerungen zum Chatserver sen
   }
 }
 ```
+
+# Anderes Beispiel
+```json
+{
+  "operation": "HANDSHAKE",
+  "data": {
+    "client": "JavaClient",
+    "version": "V1.0",
+    "location": "Windows 10/10.0 (amd64)",
+    "useragent": "Java(TM) SE Runtime Environment/24 (64bit)"
+  }
+}
+```
