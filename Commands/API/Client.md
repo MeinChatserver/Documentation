@@ -1,34 +1,34 @@
 # `Action` Message
 ```javascript
-client.send({
-  operation:	'MESSAGE_ACTION',
-  data:		{
-    room:	null,  // null (für alle) oder jeweiliger Raum-Name
-    text:	'Aktionsnachricht'
-  }
-});
+client.sendActionMessage(room, text);
+
+// room = null, an alle Räume
+client.sendActionMessage(null, 'Aktionsnachricht');
 ```
 
 # `Private` Message
 ```javascript
-client.send({
-  operation:	'MESSAGE_PRIVATE',
-  data:		{
-    room:	null,    // null (für alle) oder jeweiliger Raum-Name
-    users:	null,  // null (keine) oder andere Empfänger (Achtung: nur zur Anzeige!)
-    sender:	null,  // null (System) oder jeweiliger Nutzer, der die Nachricht versendet hat
-    text:	'Private Nachricht'
-  }
-});
+client.sendPrivateMessage(room, users, text);
+
+client.sendPrivateMessage(null, [ 'demo', 'admin' ], 'Dies ist eine Privatnachricht!');
 ```
 
 # `Public` Message
 ```javascript
-client.send({
-  operation:	'MESSAGE_PUBLIC',
-  data:		{
-    sender:	null,  // null (System) oder jeweiliger Nutzer, der die Nachricht versendet hat
-    text:	'Öffentliche Nachricht'
-  }
+client.sendPublicMessage(text);
+
+client.sendPublicMessage('Öffentliche Nachricht');
+```
+
+# `Packet`
+```javascript
+client.send(<Packet>);
+
+client.send({{
+			operation:	'MESSAGE_ACTION',
+			data:		{
+				room:	room,  // null (für alle) oder jeweiliger Raum-Name
+				text:	text
+			}
 });
 ```
