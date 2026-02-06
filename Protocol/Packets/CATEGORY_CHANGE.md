@@ -3,6 +3,6 @@
 ```json
 {
   "operation": "CATEGORY_CHANGE",
-  "data": <undocumented>
+  "data": <categoryId>
 }
 ```
