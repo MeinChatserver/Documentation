@@ -1,0 +1,2015 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mein Chatserver - REST API",
+    "version": "2.0.0",
+    "description": "Moderne REST API für das Multi-Tenant Chat-System Mein Chatserver. Vollständige Verwaltung von Benutzern, Räumen, Tickets, Authentifizierung und Systemkonfiguration mit Bearer Token Authentication."
+  },
+  "servers": [
+    {
+      "url": "https://demo.mein-chatserver.de",
+      "description": "Demo Server (ersetze mit deiner Domain)"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Bearer token"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/windows": {
+      "get": {
+        "tags": [
+          "Windows"
+        ],
+        "summary": "List all windows (paginated)",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of windows"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Windows"
+        ],
+        "summary": "Create new window",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "properties": {
+                    "type": "object"
+                  },
+                  "elements": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "properties",
+                  "elements"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Window created"
+          }
+        }
+      }
+    },
+    "/window/{id}": {
+      "get": {
+        "tags": [
+          "Windows"
+        ],
+        "summary": "Get window by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Window details"
+          },
+          "404": {
+            "description": "Window not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Windows"
+        ],
+        "summary": "Update window",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "properties": {
+                    "type": "object"
+                  },
+                  "elements": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Window updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Windows"
+        ],
+        "summary": "Delete window",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Window deleted"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "List all users (paginated)",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "rank": {
+                    "type": "integer"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8
+                  },
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "username",
+                  "email",
+                  "rank"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User details"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "rank": {
+                    "type": "integer"
+                  },
+                  "permissions": {
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Delete user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted"
+          },
+          "403": {
+            "description": "Cannot delete owner account"
+          }
+        }
+      }
+    },
+    "/system": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Get system configuration",
+        "responses": {
+          "200": {
+            "description": "System settings"
+          }
+        }
+      }
+    },
+    "/tickets": {
+      "get": {
+        "tags": [
+          "Support Tickets"
+        ],
+        "summary": "List all support tickets (paginated)",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of support tickets"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Support Tickets"
+        ],
+        "summary": "Create new support ticket",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "integer"
+                  },
+                  "priority": {
+                    "type": "string",
+                    "enum": [
+                      "LOW",
+                      "NORMAL",
+                      "HIGH"
+                    ]
+                  },
+                  "subject": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "content": {
+                    "type": "string",
+                    "maxLength": 10000
+                  }
+                },
+                "required": [
+                  "category",
+                  "priority",
+                  "subject",
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ticket created"
+          }
+        }
+      }
+    },
+    "/ticket/{id}": {
+      "get": {
+        "tags": [
+          "Support Tickets"
+        ],
+        "summary": "Get ticket with replies",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ticket details with replies"
+          },
+          "404": {
+            "description": "Ticket not found"
+          }
+        }
+      }
+    },
+    "/ticket/{id}/reply": {
+      "post": {
+        "tags": [
+          "Support Tickets"
+        ],
+        "summary": "Add reply to ticket",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "maxLength": 10000
+                  }
+                },
+                "required": [
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reply added"
+          },
+          "409": {
+            "description": "Ticket already closed"
+          }
+        }
+      }
+    },
+    "/ticket/{id}/close": {
+      "post": {
+        "tags": [
+          "Support Tickets"
+        ],
+        "summary": "Close support ticket",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ticket closed"
+          },
+          "409": {
+            "description": "Ticket already closed"
+          }
+        }
+      }
+    },
+    "/styles": {
+      "get": {
+        "tags": [
+          "Styles"
+        ],
+        "summary": "List all styles (paginated)",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of styles"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Styles"
+        ],
+        "summary": "Create new style",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-F]{6}$"
+                  }
+                },
+                "required": [
+                  "name",
+                  "color"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Style created"
+          }
+        }
+      }
+    },
+    "/style/{id}": {
+      "get": {
+        "tags": [
+          "Styles"
+        ],
+        "summary": "Get style by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Style details"
+          },
+          "404": {
+            "description": "Style not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Styles"
+        ],
+        "summary": "Update style",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-F]{6}$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Style updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Styles"
+        ],
+        "summary": "Delete style",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Style deleted"
+          }
+        }
+      }
+    },
+    "/smileys": {
+      "get": {
+        "tags": [
+          "Smileys"
+        ],
+        "summary": "List all smileys (paginated)",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of smileys"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Smileys"
+        ],
+        "summary": "Create new smiley",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "syntax": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "syntax",
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Smiley created"
+          }
+        }
+      }
+    },
+    "/smiley/{id}": {
+      "get": {
+        "tags": [
+          "Smileys"
+        ],
+        "summary": "Get smiley by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Smiley details"
+          },
+          "404": {
+            "description": "Smiley not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Smileys"
+        ],
+        "summary": "Update smiley",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "syntax": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Smiley updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Smileys"
+        ],
+        "summary": "Delete smiley",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Smiley deleted"
+          }
+        }
+      }
+    },
+    "/smileys/settings": {
+      "post": {
+        "tags": [
+          "Smileys"
+        ],
+        "summary": "Update smiley settings",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "emoji": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "emoji"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Settings updated"
+          }
+        }
+      }
+    },
+    "/server": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Get server status",
+        "responses": {
+          "200": {
+            "description": "Server status information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "online": {
+                      "type": "boolean"
+                    },
+                    "pid": {
+                      "type": "string"
+                    },
+                    "cpu": {
+                      "type": "number"
+                    },
+                    "ram": {
+                      "type": "number"
+                    },
+                    "uptime": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/server/start": {
+      "post": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Start server",
+        "responses": {
+          "200": {
+            "description": "Server started"
+          },
+          "409": {
+            "description": "Action already in progress"
+          }
+        }
+      }
+    },
+    "/server/stop": {
+      "post": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Stop server",
+        "responses": {
+          "200": {
+            "description": "Server stopped"
+          }
+        }
+      }
+    },
+    "/server/restart": {
+      "post": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Restart server",
+        "responses": {
+          "200": {
+            "description": "Server restarted"
+          }
+        }
+      }
+    },
+    "/server/reload": {
+      "post": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Reload server configuration",
+        "responses": {
+          "200": {
+            "description": "Server reloaded"
+          }
+        }
+      }
+    },
+    "/server/logs": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "List audit logs (paginated)",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of audit logs"
+          }
+        }
+      }
+    },
+    "/server/log/{date}": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Get logs for specific date",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "example": "2026-05-23"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logs for the specified date"
+          },
+          "400": {
+            "description": "Invalid date format"
+          }
+        }
+      }
+    },
+    "/security/api/tokens": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "List all API tokens",
+        "responses": {
+          "200": {
+            "description": "List of API tokens"
+          }
+        }
+      }
+    },
+    "/security/api/whitelist": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Get API whitelist",
+        "responses": {
+          "200": {
+            "description": "API whitelist configuration"
+          }
+        }
+      }
+    },
+    "/security/audit": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Get security audit log",
+        "responses": {
+          "200": {
+            "description": "Security audit entries"
+          }
+        }
+      }
+    },
+    "/rooms": {
+      "get": {
+        "tags": [
+          "Rooms"
+        ],
+        "summary": "List all rooms",
+        "responses": {
+          "200": {
+            "description": "List of rooms"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Rooms"
+        ],
+        "summary": "Create new room",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "topic": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "integer"
+                  },
+                  "style": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Room created"
+          }
+        }
+      }
+    },
+    "/room/{id}": {
+      "get": {
+        "tags": [
+          "Rooms"
+        ],
+        "summary": "Get room by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Room details"
+          },
+          "404": {
+            "description": "Room not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Rooms"
+        ],
+        "summary": "Update room",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "topic": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "integer"
+                  },
+                  "style": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Room updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Rooms"
+        ],
+        "summary": "Delete room",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Room deleted"
+          }
+        }
+      }
+    },
+    "/ranks": {
+      "get": {
+        "tags": [
+          "Ranks"
+        ],
+        "summary": "List all ranks (paginated)",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of ranks"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Ranks"
+        ],
+        "summary": "Create new rank",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-F]{6}$"
+                  },
+                  "default": {
+                    "type": "boolean"
+                  },
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "color"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Rank created"
+          }
+        }
+      }
+    },
+    "/rank/{id}": {
+      "get": {
+        "tags": [
+          "Ranks"
+        ],
+        "summary": "Get rank by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rank details"
+          },
+          "404": {
+            "description": "Rank not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Ranks"
+        ],
+        "summary": "Update rank",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-F]{6}$"
+                  },
+                  "default": {
+                    "type": "boolean"
+                  },
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rank updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Ranks"
+        ],
+        "summary": "Delete rank",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rank deleted"
+          }
+        }
+      }
+    },
+    "/prepaid": {
+      "get": {
+        "tags": [
+          "Prepaid"
+        ],
+        "summary": "Get prepaid overview (balance and active orders)",
+        "responses": {
+          "200": {
+            "description": "Balance and order information"
+          }
+        }
+      }
+    },
+    "/prepaid/transactions": {
+      "get": {
+        "tags": [
+          "Prepaid"
+        ],
+        "summary": "List all transactions (paginated)",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of transactions"
+          }
+        }
+      }
+    },
+    "/prepaid/packages": {
+      "get": {
+        "tags": [
+          "Prepaid"
+        ],
+        "summary": "List available prepaid packages",
+        "responses": {
+          "200": {
+            "description": "List of packages"
+          }
+        }
+      }
+    },
+    "/prepaid/order": {
+      "get": {
+        "tags": [
+          "Prepaid"
+        ],
+        "summary": "Get active and pending orders",
+        "responses": {
+          "200": {
+            "description": "Current orders"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Prepaid"
+        ],
+        "summary": "Create prepaid order",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "packetId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "packetId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order created"
+          },
+          "404": {
+            "description": "Package not found"
+          }
+        }
+      }
+    },
+    "/prepaid/payment": {
+      "post": {
+        "tags": [
+          "Prepaid"
+        ],
+        "summary": "Create payment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "minimum": 0.01,
+                    "maximum": 9999.99
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "BANK",
+                      "PAYPAL"
+                    ]
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "amount",
+                  "method"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Payment created"
+          },
+          "400": {
+            "description": "Invalid amount or method"
+          }
+        }
+      }
+    },
+    "/options": {
+      "get": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "List all options",
+        "responses": {
+          "200": {
+            "description": "List of system options"
+          }
+        }
+      }
+    },
+    "/option/maintenance": {
+      "get": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "Get maintenance option",
+        "responses": {
+          "200": {
+            "description": "Maintenance settings"
+          }
+        }
+      }
+    },
+    "/option/domain": {
+      "get": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "Get domain option",
+        "responses": {
+          "200": {
+            "description": "Domain settings"
+          }
+        }
+      }
+    },
+    "/option/imprint": {
+      "get": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "Get imprint option",
+        "responses": {
+          "200": {
+            "description": "Imprint settings"
+          }
+        }
+      }
+    },
+    "/option/login": {
+      "get": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "Get login option",
+        "responses": {
+          "200": {
+            "description": "Login settings"
+          }
+        }
+      }
+    },
+    "/commands": {
+      "get": {
+        "tags": [
+          "Commands"
+        ],
+        "summary": "List all commands (paginated)",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of commands"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Commands"
+        ],
+        "summary": "Create new command",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "commands": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "commands",
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Command created"
+          }
+        }
+      }
+    },
+    "/command/{id}": {
+      "get": {
+        "tags": [
+          "Commands"
+        ],
+        "summary": "Get command by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Command details"
+          },
+          "404": {
+            "description": "Command not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Commands"
+        ],
+        "summary": "Update command",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "commands": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Command updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Commands"
+        ],
+        "summary": "Delete command",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Command deleted"
+          }
+        }
+      }
+    },
+    "/categorys": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "List all categories",
+        "responses": {
+          "200": {
+            "description": "List of categories"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Create new category",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Category created"
+          }
+        }
+      }
+    },
+    "/category/{id}": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get category by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category details"
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Update category",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Category updated"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Delete category",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category deleted"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "User login",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "User logout",
+        "responses": {
+          "200": {
+            "description": "Logout successful"
+          }
+        }
+      }
+    },
+    "/auth/token": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Create API token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Token created"
+          }
+        }
+      }
+    },
+    "/auth/token/{id}": {
+      "delete": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Revoke API token",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token revoked"
+          },
+          "404": {
+            "description": "Token not found"
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}
