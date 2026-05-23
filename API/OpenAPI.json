@@ -324,7 +324,10 @@
                     "type": "integer"
                   },
                   "permissions": {
-                    "type": "array"
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 }
               }
