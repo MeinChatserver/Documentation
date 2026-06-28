@@ -16,6 +16,6 @@ jobs:
           script: |
             github.rest.repos.createDispatchEvent({
               owner: 'MeinChatserver',
-              repo: '.ROOT',
+              repo: '%2EROOT',
               event_type: 'update-submodules'
             })
