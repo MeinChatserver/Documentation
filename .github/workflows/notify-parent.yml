@@ -12,6 +12,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: MeinChatserver/.ROOT
+          ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Trigger parent update
