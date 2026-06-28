@@ -14,10 +14,12 @@ jobs:
           repository: MeinChatserver/.ROOT
           ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
+          ssh-strict: false
 
       - name: Trigger parent update
         run: |
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
+          git remote set-url origin git@github.com:MeinChatserver/.ROOT.git
           git commit --allow-empty -m "chore: trigger submodule update from repo"
           git push
