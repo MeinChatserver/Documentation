@@ -1,4 +1,4 @@
-name: Notify Parent of Update
+name: Trigger Parent Update
 
 on:
   push:
@@ -6,16 +6,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  notify:
+  trigger:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger parent update
-        uses: actions/github-script@v6
+      - uses: actions/checkout@v4
         with:
-          github-token: ${{ secrets.PAT_TOKEN }}
-          script: |
-            github.rest.repos.createDispatchEvent({
-              owner: 'MeinChatserver',
-              repo: '%2EROOT',
-              event_type: 'update-submodules'
-            })
+          repository: MeinChatserver/.ROOT
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Trigger parent update
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git commit --allow-empty -m "chore: trigger submodule update from repo"
+          git push
