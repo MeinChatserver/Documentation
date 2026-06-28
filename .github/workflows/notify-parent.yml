@@ -12,7 +12,7 @@ jobs:
       - name: Trigger parent update
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.PAT_TOKEN }}
           script: |
             github.rest.repos.createDispatchEvent({
               owner: 'MeinChatserver',
