@@ -1,0 +1,21 @@
+name: Notify Parent of Update
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger parent update
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.repos.createDispatchEvent({
+              owner: 'MeinChatserver',
+              repo: '.ROOT',
+              event_type: 'update-submodules'
+            })
