@@ -1,4 +1,4 @@
-name: Trigger Parent Update
+name: Trigger Root Update
 
 on:
   push:
@@ -9,16 +9,10 @@ jobs:
   trigger:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone and update .ROOT
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Trigger GitHub Action in .ROOT
         run: |
-          git config --global http.extraheader "Authorization: token $GITHUB_TOKEN"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-
-          mkdir -p /tmp/root-repo
-          cd /tmp/root-repo
-          git clone https://github.com/MeinChatserver/.ROOT.git .
-          git commit --allow-empty -m "chore: trigger submodule update"
-          git push
+          curl -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.DEPENDENCY_UPDATE_TOKEN }}" \
+            https://api.github.com/repos/MeinChatserver/.ROOT/dispatches \
+            -d '{"event_type":"submodule_updated"}'
