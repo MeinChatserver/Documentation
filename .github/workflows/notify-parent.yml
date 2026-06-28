@@ -15,7 +15,7 @@ jobs:
         run: |
           mkdir -p /tmp/root-repo
           cd /tmp/root-repo
-          git clone https://x-access-token:${GITHUB_TOKEN}@github.com/MeinChatserver/.ROOT.git .
+          git clone https://${GITHUB_TOKEN}@github.com/MeinChatserver/.ROOT.git .
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
           git commit --allow-empty -m "chore: trigger submodule update"
