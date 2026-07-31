@@ -7,8 +7,22 @@
   },
   "servers": [
     {
-      "url": "https://demo.mein-chatserver.de",
-      "description": "Demo Server (ersetze mit deiner Domain)"
+      "url": "https://{MANDANTORY}.{DOMAIN}/api",
+      "variables": {
+        "MANDANTORY": {
+          "default": "demo"
+        },
+        
+        "MANDANTORY": {
+          "default": "mein-chatserver.de",
+          "enum": [
+              "mein-chatserver.de",
+              "chathoster.de",
+              "messangers.de",
+              "messenging.de"
+          ]
+        }
+      }      
     }
   ],
   "components": {
