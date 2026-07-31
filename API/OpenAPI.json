@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Mein Chatserver - REST API",
+    "title": "Mein Chatserver - API",
     "version": "2.0.0",
-    "description": "Moderne REST API für das Multi-Tenant Chat-System Mein Chatserver. Vollständige Verwaltung von Benutzern, Räumen, Tickets, Authentifizierung und Systemkonfiguration mit Bearer Token Authentication."
+    "description": "Moderne REST API für das Chat-System Mein Chatserver. Vollständige Verwaltung von Benutzern, Räumen, Tickets, Authentifizierung und Systemkonfiguration mit Bearer Token Authentication."
   },
   "servers": [
     {
@@ -15,13 +15,13 @@
         "DOMAIN": {
           "default": "mein-chatserver.de",
           "enum": [
-              "mein-chatserver.de",
-              "chathoster.de",
-              "messangers.de",
-              "messenging.de"
+            "mein-chatserver.de",
+            "chathoster.de",
+            "messangers.de",
+            "messenging.de"
           ]
         }
-      }      
+      }
     }
   ],
   "components": {
@@ -29,7 +29,7 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "Bearer token"
+        "description": "Token (https://{MANDANTORY}.{DOMAIN}/admin/security/api)"
       }
     }
   },
@@ -197,6 +197,49 @@
         "responses": {
           "200": {
             "description": "Window deleted"
+          }
+        }
+      }
+    },
+    "/vouchers/redeem": {
+      "post": {
+        "tags": [
+          "Vouchers"
+        ],
+        "summary": "Redeem a voucher code",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "XXXX-XXXX-XXXX-XXXX"
+                  },
+                  "pin": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                },
+                "required": [
+                  "code",
+                  "pin"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Voucher redeemed successfully"
+          },
+          "400": {
+            "description": "Invalid code or PIN"
+          },
+          "404": {
+            "description": "Voucher not found"
           }
         }
       }
@@ -391,6 +434,108 @@
         }
       }
     },
+    "/system/permissions": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "summary": "Get all available permissions",
+        "description": "Returns a list of all system permissions with their metadata",
+        "responses": {
+          "200": {
+            "description": "List of permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "Permission ID"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Permission identifier (e.g., System.Administration.Prepaid.Options)"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Human-readable description"
+                      },
+                      "color": {
+                        "type": "string",
+                        "description": "Color identifier for UI display"
+                      },
+                      "icon": {
+                        "type": "string",
+                        "description": "Icon identifier for UI display"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/admin/ticket/create": {
+      "post": {
+        "tags": [
+          "Support Tickets"
+        ],
+        "summary": "Create new support ticket (admin endpoint)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "integer"
+                  },
+                  "priority": {
+                    "type": "string",
+                    "enum": [
+                      "LOW",
+                      "NORMAL",
+                      "HIGH"
+                    ]
+                  },
+                  "subject": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "content": {
+                    "type": "string",
+                    "maxLength": 10000
+                  }
+                },
+                "required": [
+                  "category",
+                  "priority",
+                  "subject",
+                  "content"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ticket created"
+          }
+        }
+      }
+    },
     "/tickets": {
       "get": {
         "tags": [
@@ -563,6 +708,59 @@
           },
           "409": {
             "description": "Ticket already closed"
+          }
+        }
+      }
+    },
+    "/faq": {
+      "get": {
+        "tags": [
+          "Support FAQ"
+        ],
+        "summary": "Get all FAQ entries or filter by name",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of FAQ entries or single FAQ entry"
+          }
+        }
+      }
+    },
+    "/changelog": {
+      "get": {
+        "tags": [
+          "Support Changelog"
+        ],
+        "summary": "Get changelog entries (paginated)",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Changelog entries"
           }
         }
       }
@@ -881,6 +1079,17 @@
       }
     },
     "/smileys/settings": {
+      "get": {
+        "tags": [
+          "Smileys"
+        ],
+        "summary": "Get smiley settings",
+        "responses": {
+          "200": {
+            "description": "Smiley settings"
+          }
+        }
+      },
       "post": {
         "tags": [
           "Smileys"
@@ -1090,6 +1299,55 @@
             "description": "API whitelist configuration"
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Add IP to whitelist",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ip": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP added to whitelist"
+          }
+        }
+      }
+    },
+    "/security/api/whitelist/{id}": {
+      "delete": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "Remove IP from whitelist",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "IP removed from whitelist"
+          }
+        }
       }
     },
     "/security/audit": {
@@ -1098,9 +1356,40 @@
           "Security"
         ],
         "summary": "Get security audit log",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Security audit entries"
+          }
+        }
+      }
+    },
+    "/rooms/status": {
+      "get": {
+        "tags": [
+          "Rooms"
+        ],
+        "summary": "Get online status for all rooms",
+        "responses": {
+          "200": {
+            "description": "List of rooms with online status"
           }
         }
       }
@@ -1565,6 +1854,190 @@
         }
       }
     },
+    "/payments/initiate": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Initiate a payment based on method type",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number"
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "VOUCHER",
+                      "PAYPAL",
+                      "STRIPE",
+                      "BANK"
+                    ]
+                  }
+                },
+                "required": [
+                  "amount",
+                  "method"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment flow initiated"
+          },
+          "400": {
+            "description": "Invalid payment method or amount"
+          }
+        }
+      }
+    },
+    "/payments/paypal/createOrder": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Create a PayPal order for payment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "default": "EUR"
+                  },
+                  "returnUrl": {
+                    "type": "string"
+                  },
+                  "cancelUrl": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "amount",
+                  "returnUrl",
+                  "cancelUrl"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PayPal order created"
+          },
+          "400": {
+            "description": "Invalid request"
+          }
+        }
+      }
+    },
+    "/payments/paypal/captureOrder": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Capture a PayPal order after user approval",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "orderId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PayPal order captured successfully"
+          },
+          "400": {
+            "description": "Capture failed"
+          }
+        }
+      }
+    },
+    "/payments/paypal/webhook": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "PayPal webhook endpoint for payment events",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "event_type": {
+                    "type": "string"
+                  },
+                  "resource": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook processed"
+          },
+          "400": {
+            "description": "Invalid webhook"
+          }
+        }
+      }
+    },
+    "/payments/status/{orderId}": {
+      "get": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Get payment status by order ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment status"
+          },
+          "404": {
+            "description": "Payment not found"
+          }
+        }
+      }
+    },
     "/options": {
       "get": {
         "tags": [
@@ -1589,6 +2062,27 @@
             "description": "Maintenance settings"
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "Update maintenance option",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Maintenance settings updated"
+          }
+        }
       }
     },
     "/option/domain": {
@@ -1600,6 +2094,27 @@
         "responses": {
           "200": {
             "description": "Domain settings"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "Update domain option",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain settings updated"
           }
         }
       }
@@ -1615,6 +2130,27 @@
             "description": "Imprint settings"
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "Update imprint option",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Imprint updated"
+          }
+        }
       }
     },
     "/option/login": {
@@ -1626,6 +2162,27 @@
         "responses": {
           "200": {
             "description": "Login settings"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Options"
+        ],
+        "summary": "Update login design option",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login design updated"
           }
         }
       }
@@ -1794,6 +2351,53 @@
         "responses": {
           "200": {
             "description": "Command deleted"
+          }
+        }
+      }
+    },
+    "/commands/schema": {
+      "get": {
+        "tags": [
+          "Commands"
+        ],
+        "summary": "Get command schema for editor",
+        "responses": {
+          "200": {
+            "description": "Command schema with available classes and methods"
+          }
+        }
+      }
+    },
+    "/commands/validate": {
+      "post": {
+        "tags": [
+          "Commands"
+        ],
+        "summary": "Validate command code",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Code validation result"
+          },
+          "400": {
+            "description": "Validation failed"
           }
         }
       }
@@ -1973,6 +2577,22 @@
         }
       }
     },
+    "/auth/session": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get current session",
+        "responses": {
+          "200": {
+            "description": "Current session data"
+          },
+          "401": {
+            "description": "Not authenticated"
+          }
+        }
+      }
+    },
     "/auth/token": {
       "post": {
         "tags": [
@@ -2022,6 +2642,45 @@
           },
           "404": {
             "description": "Token not found"
+          }
+        }
+      }
+    },
+    "/analytics": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Get complete analytics data (today, week, month, current, graph)",
+        "responses": {
+          "200": {
+            "description": "Complete analytics data with comparisons"
+          }
+        }
+      }
+    },
+    "/analytics/visitors": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Get visitor statistics (month, week)",
+        "responses": {
+          "200": {
+            "description": "Visitor statistics"
+          }
+        }
+      }
+    },
+    "/analytics/live": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Get live visitor count (last 30 minutes)",
+        "responses": {
+          "200": {
+            "description": "Live visitor count"
           }
         }
       }
