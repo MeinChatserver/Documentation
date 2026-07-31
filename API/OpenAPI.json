@@ -12,8 +12,7 @@
         "MANDANTORY": {
           "default": "demo"
         },
-        
-        "MANDANTORY": {
+        "DOMAIN": {
           "default": "mein-chatserver.de",
           "enum": [
               "mein-chatserver.de",
